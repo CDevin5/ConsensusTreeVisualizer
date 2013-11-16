@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/218/trunk/src/figtree/panel
+END
+TreeLayoutController.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/209/trunk/src/figtree/panel/TreeLayoutController.java
+END
+ScaleBarPainterController.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/209/trunk/src/figtree/panel/ScaleBarPainterController.java
+END
+TreeAppearanceController.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/218/trunk/src/figtree/panel/TreeAppearanceController.java
+END
+TreeColouringController.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/218/trunk/src/figtree/panel/TreeColouringController.java
+END
+FigTreePanel.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/218/trunk/src/figtree/panel/FigTreePanel.java
+END
+TreeViewerController.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/209/trunk/src/figtree/panel/TreeViewerController.java
+END
+LabelPainterController.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/209/trunk/src/figtree/panel/LabelPainterController.java
+END
+TreesController.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/209/trunk/src/figtree/panel/TreesController.java
+END
+SimpleControlPalette.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/209/trunk/src/figtree/panel/SimpleControlPalette.java
+END
+SimpleTreeViewer.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/209/trunk/src/figtree/panel/SimpleTreeViewer.java
+END
+SimpleLabelPainter.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/209/trunk/src/figtree/panel/SimpleLabelPainter.java
+END

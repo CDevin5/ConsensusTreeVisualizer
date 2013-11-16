@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/146/trunk/WebRoot/WEB-INF
+END
+context.xml
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/146/trunk/WebRoot/WEB-INF/context.xml
+END
+jetty-web.xml
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/146/trunk/WebRoot/WEB-INF/jetty-web.xml
+END
+web.xml
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/146/trunk/WebRoot/WEB-INF/web.xml
+END
