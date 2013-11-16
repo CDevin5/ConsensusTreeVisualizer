@@ -195,10 +195,11 @@ def partitionsToTree(partitionStringL, tipL):
         possibleChildren.append([currStr, newick])
         
     finalLeftoverIndices = findZeros(seenTips)
+    print "final ind", finalLeftoverIndices
     finalLeftovers = []
     for i in finalLeftoverIndices:
-        finalLeftovers += str(tipL[i])
-        
+        finalLeftovers.append(str(tipL[i]))
+    print "FInal left", finalLeftovers
     finalNewick = '(('
     for child in possibleChildren:
         finalNewick += child[1] + ","
@@ -221,11 +222,11 @@ def partitionsToTree(partitionStringL, tipL):
     
     return finalNewick
 
-def main():
+def main(consensusValue):
     tipL = consensusValues(treeList)
     partitionStringL = []
     for partition in partitionD:
-        if partitionD[partition] == 100:
+        if partitionD[partition] >= consensusValue:
             partitionStringL += [partition]
     
     return partitionsToTree(partitionStringL, tipL)
