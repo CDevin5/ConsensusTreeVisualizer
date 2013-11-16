@@ -1,15 +1,25 @@
 
 from Caesal import *
+import copy
+
 partitionD = {}
 
-def consensusValues():
-    tipL = flatten(treeList[0])
-    for tree in treeList:
+t1 = (7, ((2, (1, 3)), (6, (0, (4, 5)))))
+t2 = (0, ((7, (1, 3)), (6, (2, (4, 5)))))
+t3 = (0, ((7, (1, 3)), (2, (6, (4, 5)))))
+t4 = (6, ((2, (1, 3)), (7, (0, (5, 4)))))
+t5 = (2, ((6, (1, 3)), (0, (7, (4, 5)))))
+miniTreeL= [t1, t2, t3, t4, t5]
+
+def consensusValues(treeL):
+    unorderedTipL = flatten(treeL[0])
+    tipL = range(min(unorderedTipL), max(unorderedTipL)+1)
+    for tree in treeL:
         partitionL = partition(tree)
         partitionString(tipL, partitionL)
 
     for key in partitionD.keys():
-        partitionD[key] *= 100.0/len(treeList)
+        partitionD[key] *= 100.0/len(treeL)
         
     return partitionD
 
@@ -43,11 +53,10 @@ def partitionString(tipL, partitionL):
     ''' Turns a list of partitions into a binary string and puts in a dictionary '''
     for partition in partitionL:
         newPartition = flatten(partition)
-        # Start at 1 because our special leaf always is '1'
-        partitionStr = '1'
+        partitionStr = ''
 
         # If the partition contains a tip, it is not grouped with special leaf
-        for tip in tipL[1:]:
+        for tip in tipL:
             if tip in newPartition:
                 partitionStr += '0'
             else:
@@ -59,4 +68,57 @@ def partitionString(tipL, partitionL):
         else:
             partitionD[partitionStr] += 1
     return partitionD
-                
+
+def flipBits(string):
+    newString = ""
+    for char in string:
+        if char == "1":
+            newString += "0"
+        else:
+            newString += "1"
+    return newString
+
+def stringNor(string1,string2):
+    newS = ""
+    for i in range(string1):
+        if (string[i] == 0) and (string2[i] == 0):
+            newS += "1"
+        else:
+            newS += "0"
+    return newS
+
+def partitionsToTree(partitionStringL, tipL):
+    ''' Takes a list of partition bitstrings with same consensus percentage,
+    and outputs a newick consensus tree '''
+    
+    leftoverTipBitL = [0]*len(tipL)
+    leftoverTipL = []
+
+    for i in range(len(partitionStringL)):
+        s = partitionStringL[i]
+
+        # Make the 1s represent the smaller partition
+        if s.count('1') >= len(s)/2:
+            partitionStringL[i] = flipBits(s)
+
+    finalTree = []
+    finalTreeClades = []
+
+    # Loop through the partition strings. Put all the species with a
+    # 1 from a given string in a tuple. Then we'll make a tuple of those
+    # tuples, and add in the leftover tip names.
+    for s in partitionStringL:
+        cladeL = []
+        for i in range(len(s)):
+            if s[i] == '1':
+                cladeL += tipL[i]
+                leftoverTipBitL[i] = '1'
+        finalTreeClades.append(tuple(cladeL))
+
+    for i in range(len(leftoverTipBitL)):
+        if leftoverTipBitL[i] == 0:
+            leftoverTipL += tipL[i]
+            
+    finalTree = tuple(leftoverTipL + finalTreeClades)
+    
+    return '(%s)' % str(finalTree)
