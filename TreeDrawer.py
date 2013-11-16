@@ -14,7 +14,7 @@ import math
 
 DEFAULT_HEIGHT = 512
 DEFAULT_WIDTH = 512
-DEFAULT_FORMAT = '.SVG'
+DEFAULT_FORMAT = '.png'
 
 IMAGE_DIR = 'images'
 
