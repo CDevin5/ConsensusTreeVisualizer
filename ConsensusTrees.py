@@ -12,8 +12,7 @@ t5 = (2, ((6, (1, 3)), (0, (7, (4, 5)))))
 miniTreeL= [t1, t2, t3, t4, t5]
 
 def consensusValues(treeL):
-    unorderedTipL = flatten(treeL[0])
-    tipL = range(min(unorderedTipL), max(unorderedTipL)+1)
+    tipL = flatten(treeL[0])
     for tree in treeL:
         partitionL = partition(tree)
         partitionString(tipL, partitionL)
@@ -21,7 +20,7 @@ def consensusValues(treeL):
     for key in partitionD.keys():
         partitionD[key] *= 100.0/len(treeL)
         
-    return partitionD
+    return tipL
 
 
 
@@ -67,7 +66,7 @@ def partitionString(tipL, partitionL):
         # If we've seen it before, increase it's count
         else:
             partitionD[partitionStr] += 1
-    return partitionD
+    return 
 
 def flipBits(string):
     newString = ""
@@ -111,14 +110,23 @@ def partitionsToTree(partitionStringL, tipL):
         cladeL = []
         for i in range(len(s)):
             if s[i] == '1':
-                cladeL += tipL[i]
+                cladeL += [tipL[i]]
                 leftoverTipBitL[i] = '1'
         finalTreeClades.append(tuple(cladeL))
 
     for i in range(len(leftoverTipBitL)):
         if leftoverTipBitL[i] == 0:
-            leftoverTipL += tipL[i]
+            leftoverTipL += [tipL[i]]
             
     finalTree = tuple(leftoverTipL + finalTreeClades)
     
     return '(%s)' % str(finalTree)
+
+def main():
+    tipL = consensusValues(treeList)
+    partitionStringL = []
+    for partition in partitionD:
+        if partitionD[partition] == 100:
+            partitionStringL += [partition]
+    
+    return partitionsToTree(partitionStringL, tipL)
