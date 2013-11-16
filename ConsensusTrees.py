@@ -1,14 +1,14 @@
 
-from Caesal import *
+#from Caesal import *
 import copy
 
 partitionD = {}
 
-t1 = (7, ((2, (1, 3)), (6, (0, (4, 5)))))
-t2 = (0, ((7, (1, 3)), (6, (2, (4, 5)))))
-t3 = (0, ((7, (1, 3)), (2, (6, (4, 5)))))
-t4 = (6, ((2, (1, 3)), (7, (0, (5, 4)))))
-t5 = (2, ((6, (1, 3)), (0, (7, (4, 5)))))
+t1 = ('7', (('2', ('1', '3')), ('6', ('0', ('4', '5')))))
+t2 = ('0', (('7', ('1', '3')), ('6', ('2', ('4', '5')))))
+t3 = ('0', (('7', ('1', '3')), ('2', ('6', ('4', '5')))))
+t4 = ('6', (('2', ('1', '3')), ('7', ('0', ('5', '4')))))
+t5 = ('2', (('6', ('1', '3')), ('0', ('7', ('4', '5')))))
 miniTreeL= [t1, t2, t3, t4, t5]
 
 def consensusValues(treeL):
@@ -79,19 +79,68 @@ def flipBits(string):
 
 def stringNor(string1,string2):
     newS = ""
-    for i in range(string1):
-        if (string[i] == 0) and (string2[i] == 0):
+    for i in range(len(string1)):
+        if (string[i] == '0') and (string2[i] == '0'):
             newS += "1"
         else:
             newS += "0"
     return newS
 
+def stringAnd(string1,string2):
+    newS = ""
+    for i in range(len(string1)):
+        if (string1[i] == '1') and (string2[i] == '1'):
+            newS += "1"
+        else:
+            newS += "0"
+    return newS
+
+def stringOr(string1,string2):
+    newS = ""
+    for i in range(len(string1)):
+        if (string1[i] == '0') and (string2[i] == '0'):
+            newS += "0"
+        else:
+            newS += "1"
+    return newS
+
+def stringIsZeros(string):
+    for char in string:
+        if char == '1':
+            return False
+    return True
+
+def countOnes(string):
+    return string.count('1')
+
+def findOnes(string):
+    L = []
+    for i in range(len(string)):
+        if string[i] == '1':
+            L += [i]
+    return L
+
+def findZeros(string):
+    L = []
+    for i in range(len(string)):
+        if string[i] == '0':
+            L += [i]
+    return L
+
+def bitwiseSubtract(string1, string2):
+    newString = ''
+    for i in range(len(string1)):
+        if (string1[i] == string2[i]):
+            newString += '0'
+        elif (string1[i] == '1') and (string2[i] == '0') :
+            newString += '1'
+        else:
+            newString += '0'
+    return newString
+
 def partitionsToTree(partitionStringL, tipL):
     ''' Takes a list of partition bitstrings with same consensus percentage,
     and outputs a newick consensus tree '''
-    
-    leftoverTipBitL = [0]*len(tipL)
-    leftoverTipL = []
 
     for i in range(len(partitionStringL)):
         s = partitionStringL[i]
@@ -100,33 +149,69 @@ def partitionsToTree(partitionStringL, tipL):
         if s.count('1') >= len(s)/2:
             partitionStringL[i] = flipBits(s)
 
-    finalTree = []
-    finalTreeClades = []
+    sortedPartitionStringL = sorted(partitionStringL, key=countOnes)
+    seenTips = "0"*len(tipL)
+    possibleChildren = []
 
-    # Loop through the partition strings. Put all the species with a
-    # 1 from a given string in a tuple. Then we'll make a tuple of those
-    # tuples, and add in the leftover tip names.
-    for s in partitionStringL:
-        cladeL = []
-        for i in range(len(s)):
-            if s[i] == '1':
-                cladeL += [tipL[i]]
-                leftoverTipBitL[i] = '1'
-        finalTreeClades.append(tuple(cladeL))
+    for i in range(len(sortedPartitionStringL)):
+        
+        currStr = sortedPartitionStringL[i]
 
-    for i in range(len(leftoverTipBitL)):
-        if leftoverTipBitL[i] == 0:
-            leftoverTipL += [tipL[i]]
-            
-    finalTree = tuple(leftoverTipL + finalTreeClades)
+        andedString = stringAnd(seenTips, currStr)
+        onesIndices = findOnes(andedString)
+
+        newick = "("
+        if not stringIsZeros(andedString):
+            newPossibleChildren = [] 
+            for child in possibleChildren:
+
+                wasAChild = False
+                for oneIndex in onesIndices:
+
+                    if child[0][oneIndex] == '1':
+                        newick += child[1] + ","
+                        wasAChild = True
+                        break
+                if not wasAChild:
+                    newPossibleChildren.append(child)
+                
+            leftovers = bitwiseSubtract(currStr, andedString)
+            possibleChildren = newPossibleChildren
+
+        else:
+            leftovers = currStr
+        
+        for j in range(len(leftovers)):
+            if leftovers[j] == '1':
+                newick += str(tipL[j]) + ","
+
+        newick = newick [:-1] + ")"
+        seenTips = stringOr(seenTips, currStr)
+        
+        possibleChildren.append([currStr, newick])
+        
+    finalLeftoverIndices = findZeros(seenTips)
+    finalLeftovers = []
+    for i in finalLeftoverIndices:
+        finalLeftovers.append(str(tipL[i]))
+    finalNewick = '(('
+    for child in possibleChildren:
+        finalNewick += child[1] + ","
+    for leftover in finalLeftovers:
+        finalNewick += leftover + ","
+    finalNewick = finalNewick[:-1] + '))'
     
-    return '(%s)' % str(finalTree)
+    return finalNewick
 
-def main():
-    tipL = consensusValues(treeList)
+def main(consensusValue, filename):
+    data = __import__(filename)
+    if consensusValue <= 50:
+        print "Invalid input, must be greater than 50"
+        return
+    tipL = consensusValues(data.treeList)
     partitionStringL = []
     for partition in partitionD:
-        if partitionD[partition] == 100:
+        if partitionD[partition] >= consensusValue:
             partitionStringL += [partition]
     
     return partitionsToTree(partitionStringL, tipL)
