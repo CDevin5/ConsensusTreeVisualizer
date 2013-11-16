@@ -1,5 +1,5 @@
 
-from Caesal import *
+#from Caesal import *
 import copy
 
 partitionD = {}
@@ -156,32 +156,28 @@ def partitionsToTree(partitionStringL, tipL):
     for i in range(len(sortedPartitionStringL)):
         
         currStr = sortedPartitionStringL[i]
-      #  print "Curr str ", currStr
-       # print
+
         andedString = stringAnd(seenTips, currStr)
         onesIndices = findOnes(andedString)
 
         newick = "("
         if not stringIsZeros(andedString):
-            newPossibleChildren = [] # Without this parent's children
+            newPossibleChildren = [] 
             for child in possibleChildren:
-               # print "child"
+
                 wasAChild = False
                 for oneIndex in onesIndices:
-                 #   print child[0]
-                 #   print
+
                     if child[0][oneIndex] == '1':
                         newick += child[1] + ","
                         wasAChild = True
-                       #print "about to break"
                         break
                 if not wasAChild:
-                   # print "adding chlild to new"
                     newPossibleChildren.append(child)
                 
             leftovers = bitwiseSubtract(currStr, andedString)
             possibleChildren = newPossibleChildren
-           # print "possible CHildren ", possibleChildren
+
         else:
             leftovers = currStr
         
@@ -195,35 +191,24 @@ def partitionsToTree(partitionStringL, tipL):
         possibleChildren.append([currStr, newick])
         
     finalLeftoverIndices = findZeros(seenTips)
-    print "final ind", finalLeftoverIndices
     finalLeftovers = []
     for i in finalLeftoverIndices:
         finalLeftovers.append(str(tipL[i]))
-    print "FInal left", finalLeftovers
     finalNewick = '(('
     for child in possibleChildren:
         finalNewick += child[1] + ","
     for leftover in finalLeftovers:
         finalNewick += leftover + ","
     finalNewick = finalNewick[:-1] + '))'
-        
-##        cladeL = []
-##        for i in range(len(s)):
-##          if s[i] == '1':                
-##                cladeL += [tipL[i]]
-##                leftoverTipBitL[i] = '1'
-##        finalTreeClades.append(tuple(cladeL))
-##
-##    for i in range(len(leftoverTipBitL)):
-##        if leftoverTipBitL[i] == 0:
-##            leftoverTipL += [tipL[i]]
-##            
-##    finalTree = tuple(leftoverTipL + finalTreeClades)
     
     return finalNewick
 
-def main(consensusValue):
-    tipL = consensusValues(treeList)
+def main(consensusValue, filename):
+    data = __import__(filename)
+    if consensusValue <= 50:
+        print "Invalid input, must be greater than 50"
+        return
+    tipL = consensusValues(data.treeList)
     partitionStringL = []
     for partition in partitionD:
         if partitionD[partition] >= consensusValue:
