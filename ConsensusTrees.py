@@ -1,6 +1,4 @@
-
-#from Caesal import *
-import copy
+# Rachel Sherman, Ben Johnson, Coline Devin, and Sophia Williams
 
 partitionD = {}
 
